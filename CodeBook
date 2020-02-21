@@ -56,4 +56,4 @@ tBodyAccJerkMean
 tBodyGyroMean
 tBodyGyroJerkMean
 
-The complete list of variables of each feature vector is available in 'features_update.txt'
+I picked the mean or standard deviation (std) of the features and created a tidy data file, and the complete list of variables of each feature vector is available in 'features_update.txt'
