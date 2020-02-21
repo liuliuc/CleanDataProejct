@@ -59,4 +59,6 @@
 # save as a new txt file named tidydata
     fwrite(datadcast, "tidydata.txt")
     
-    
+# create a new updated feature txt file
+    featurenames = list(names(datadcast)[3:81])
+    fwrite(featurenames, "features_update.txt")    
