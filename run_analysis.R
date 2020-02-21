@@ -57,8 +57,9 @@
     datadcast = dcast(datamelt, subject + activity ~ variable, mean)
     
 # save as a new txt file named tidydata
-    fwrite(datadcast, "tidydata.txt")
-    
+    # fwrite(datadcast, "tidydata.txt")
+    write.table(datadcast, "tidydata.txt", row.name=FALSE)
+
 # create a new updated feature txt file
     featurenames = list(names(datadcast)[3:81])
     fwrite(featurenames, "features_update.txt")    
