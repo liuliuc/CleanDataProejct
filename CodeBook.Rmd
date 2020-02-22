@@ -4,15 +4,44 @@ author: "Li"
 date: "2/22/2020"
 output: html_document
 ---
-libraries used
+# libraries used
     library(data.table)
     library(dplyr)
+# data source
+    ttps://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
+# description of the dataset 
+    http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+# variables
+    xtest = fread("./test/X_test.txt")
+    ytest = fread("./test/y_test.txt")
+    subject_test = fread("./test/subject_test.txt")
+    test = cbind(subject_test,ytest,xtest)
+    colnames(test)[1] = "subject"
+    colnames(test)[2] = "activity"
+    xtrain = fread("./train/X_train.txt")
+    ytrain = fread("./train/y_train.txt")
+    subject_train = fread("./train/subject_train.txt")
+    train = cbind(subject_train,ytrain,xtrain)
+    colnames(train)[1] = "subject"
+    colnames(train)[2] = "activity"
+    mergeddata = rbind(train, test)
+    features = fread("./features.txt")
+    colnames(mergeddata) [3:563] <- c(features$V2)
+    colnames = colnames(mergeddata)
+    selectedcol = c(colnames[1:2], colnames[grep("mean|std", colnames)])
+    selecteddata = mergeddata[, ..selectedcol]
+    activitylabels = fread("./activity_labels.txt")
+    activityfac = factor(activitylabels$V2, as.factor(activitylabels$V2))
+    selectedfac = factor(selecteddata$activity)
+    selecteddata[["activity"]] = factor(selecteddata[,activity]
+                                        , levels(selectedfac)
+                                        , levels(activityfac))
+    selecteddata[["subject"]] = factor(selecteddata[,subject])
+    datamelt = melt(selecteddata, id=c("subject", "activity"))
+    datadcast = dcast(datamelt, subject + activity ~ variable, mean)
 
-data source
-ttps://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
 
-description of the dataset http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
-
+## steps
 # set the current work directory to be the same directory as the datasets were extracted.
     setwd("./UCI HAR Dataset")
 
@@ -68,8 +97,3 @@ description of the dataset http://archive.ics.uci.edu/ml/datasets/Human+Activity
 # create a new updated feature txt file
     featurenames = list(names(datadcast)[3:81])
     fwrite(featurenames, "features_update.txt")
-    
-# Create codebook
-    install.packages("dataMaid")
-    library(dataMaid)
-    makeCodebook(datadcast)
